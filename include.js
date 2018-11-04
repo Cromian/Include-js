@@ -1,55 +1,40 @@
-// Load JavaScript file
-function loadJs(jsFilePath, htmlTag) {
-    var js = document.createElement("script");
+var include = {
 
-    js.type = "text/javascript";
-    js.src = jsFilePath;
+    js: function (file, tag) {
 
-    document.getElementById(htmlTag).appendChild(js);
-}
+        var js = document.createElement("script");
+        js.type = "text/javascript";
+        js.src = file;
 
-// Load CSS file
-function loadCSS(cssFilePath, htmlTag) {
-    var css = document.createElement("link");
-    css.type = "text/css";
-    css.rel = "stylesheet";
-    css.href = cssFilePath;
+        document.getElementById(tag).appendChild(js);
+    },
 
-    document.getElementById(htmlTag).appendChild(css);
-}
-
-// Load HTML file
-function loadHTML(htmlFilePath, htmlTag) {
+    css: function (file, tag) {
+       
+        var css = document.createElement("link");
+        css.type = "text/css";
+        css.rel = "stylesheet";
+        css.href = file;
     
-    var xhr= new XMLHttpRequest();
-    xhr.open('GET', htmlFilePath, true);
-    xhr.onreadystatechange= function() {
-        if (this.readyState!==4) return;
-        if (this.status!==200) return;
+        document.getElementById(tag).appendChild(css);
 
-        var div = document.createElement("div");
-        div.id = htmlTag + '_data';
-        div.innerHTML = this.responseText;
-        document.getElementById(htmlTag).appendChild(div);
+    },
 
-    };
-    xhr.send();
-}
+    html: function (file, tag) {
 
-// Include Function
-function include(clusterName, options) {
+        var xhr= new XMLHttpRequest();
+        xhr.open('GET', file, true);
+        xhr.onreadystatechange= function() {
+            if (this.readyState!==4) return;
+            if (this.status!==200) return;
     
-    if (options.css) {
-        loadCSS('clusters/' + clusterName + '/style.css', clusterName);
-    }
+            var div = document.createElement("div");
+            div.id = tag + '_data';
+            div.innerHTML = this.responseText;
+            document.getElementById(tag).appendChild(div);
+    
+        };
+        xhr.send();
 
-    if (options.js) {
-        loadJs('clusters/' + clusterName + '/script.js', clusterName);
-    }
-
-    if (options.html) {
-      loadHTML('clusters/' + clusterName + '/cluster.html', clusterName);
     }
 }
-
-
